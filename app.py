@@ -2,10 +2,25 @@ import streamlit as st
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
-# Load the saved model
-model = joblib.load('models/RF_Model.pkl')
-columns = joblib.load('models/RF_Columns.pkl')
+# Load the saved model and columns
+model = joblib.load('models/Random_Forest_Model.pkl')
+columns = joblib.load('models/Random_Forest_Columns.pkl')
+
+# Load the training data to create the scaler
+# Replace with the path to your training data CSV file
+df = pd.read_csv('Cost_of_Living_Index_by_Country_2024.csv')
+
+# Drop columns and handle missing values as done during model training
+df = df.drop(['Rank', 'Country'], axis=1)
+df = df.dropna()
+df = df.drop_duplicates()
+
+# Create a new scaler using the training data
+scaler = StandardScaler()
+X = df[columns]  # Features used for scaling
+X_scaled = scaler.fit_transform(X)
 
 st.title("Local Purchasing Power Prediction")
 
@@ -36,7 +51,10 @@ st.write(input_data)
 # Prepare the features for the model
 input_features_df = pd.DataFrame(input_features, columns=columns)
 
+# Scale the input features
+input_features_scaled = scaler.transform(input_features_df)
+
 # Predict the output using the loaded model
-prediction = model.predict(input_features_df)
+prediction = model.predict(input_features_scaled)
 
 st.write(f"### Predicted Local Purchasing Power Index: **{prediction[0]:.2f}**")
