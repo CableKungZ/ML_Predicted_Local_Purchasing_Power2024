@@ -7,10 +7,8 @@ model = joblib.load('models/GB_best_model.pkl')
 mapping = joblib.load('models/GB_mapping.pkl')
 columns = joblib.load('models/GB_columns.pkl')
 
-# Streamlit app title
 st.title("Local Purchasing Power Prediction")
 
-# Inputs for the features
 st.sidebar.header("Input Features")
 
 def user_input_features():
@@ -30,17 +28,12 @@ def user_input_features():
     features = np.array([list(data.values())])
     return features, data
 
-# Getting user input features
 input_features, input_data = user_input_features()
 
-# Display input values
 st.write("### Input Features")
 st.write(input_data)
 
-# Predict using the loaded model
 prediction = model.predict(input_features)
 predicted_category = list(mapping.keys())[list(mapping.values()).index(prediction[0])]
 
-# Display prediction result
 st.write(f"### Predicted Local Purchasing Power Category: **{predicted_category}**")
-
