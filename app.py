@@ -3,11 +3,9 @@ import joblib
 import numpy as np
 import pandas as pd
 
-# Load the saved model and label encoder
-model = joblib.load('models/Random_Forest_Model.pkl')
-# Load any encoder if used for categorical features
-# encoder = joblib.load('models/RF_Label_Encoder.pkl') 
-columns = joblib.load('models/Random_Forest_Columns.pkl')
+# Load the saved model
+model = joblib.load('models/RF_Model.pkl')
+columns = joblib.load('models/RF_Columns.pkl')
 
 st.title("Local Purchasing Power Prediction")
 
@@ -40,8 +38,5 @@ input_features_df = pd.DataFrame(input_features, columns=columns)
 
 # Predict the output using the loaded model
 prediction = model.predict(input_features_df)
-
-# If you have categorical predictions, you might need to decode them
-# prediction_label = encoder.inverse_transform(prediction)
 
 st.write(f"### Predicted Local Purchasing Power Index: **{prediction[0]:.2f}**")
