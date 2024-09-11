@@ -1,11 +1,13 @@
 import streamlit as st
 import joblib
 import numpy as np
+import pandas as pd
 
-# Load the saved model, label encoding mapping, and columns
-model = joblib.load('models/Random_Forest_Model.pkl')
-mapping = joblib.load('models/Random_Forest_Label_Encoder.pkl')
-columns = joblib.load('models/Random_Forest_Columns.pkl')
+# Load the saved model and label encoder
+model = joblib.load('models/RF_Model.pkl')
+# Load any encoder if used for categorical features
+# encoder = joblib.load('models/RF_Label_Encoder.pkl') 
+columns = joblib.load('models/RF_Columns.pkl')
 
 st.title("Local Purchasing Power Prediction")
 
@@ -33,7 +35,13 @@ input_features, input_data = user_input_features()
 st.write("### Input Features")
 st.write(input_data)
 
-prediction = model.predict(input_features)
-predicted_category = list(mapping.keys())[list(mapping.values()).index(prediction[0])]
+# Prepare the features for the model
+input_features_df = pd.DataFrame(input_features, columns=columns)
 
-st.write(f"### Predicted Local Purchasing Power Category: **{predicted_category}**")
+# Predict the output using the loaded model
+prediction = model.predict(input_features_df)
+
+# If you have categorical predictions, you might need to decode them
+# prediction_label = encoder.inverse_transform(prediction)
+
+st.write(f"### Predicted Local Purchasing Power Index: **{prediction[0]:.2f}**")
