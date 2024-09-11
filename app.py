@@ -3,9 +3,9 @@ import joblib
 import numpy as np
 
 # Load the saved model, label encoding mapping, and columns
-model = joblib.load('models/GB_best_model.pkl')
-mapping = joblib.load('models/GB_mapping.pkl')
-columns = joblib.load('models/GB_columns.pkl')
+model = joblib.load('models/Random_Forest_Model.pkl')
+mapping = joblib.load('models/Random_Forest_Label_Encoder.pkl')
+columns = joblib.load('models/Random_Forest_Columns.pkl')
 
 st.title("Local Purchasing Power Prediction")
 
