@@ -7,7 +7,7 @@ import pandas as pd
 model = joblib.load('models/Random_Forest_Model.pkl')
 # Load any encoder if used for categorical features
 # encoder = joblib.load('models/RF_Label_Encoder.pkl') 
-columns = joblib.load('models/Random_Forest_Columns.pkl.pkl')
+columns = joblib.load('models/Random_Forest_Columns.pkl')
 
 st.title("Local Purchasing Power Prediction")
 
