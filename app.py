@@ -4,10 +4,10 @@ import numpy as np
 import pandas as pd
 
 # Load the saved model and label encoder
-model = joblib.load('models/RF_Model.pkl')
+model = joblib.load('models/Random_Forest_Model.pkl')
 # Load any encoder if used for categorical features
 # encoder = joblib.load('models/RF_Label_Encoder.pkl') 
-columns = joblib.load('models/RF_Columns.pkl')
+columns = joblib.load('models/Random_Forest_Columns.pkl.pkl')
 
 st.title("Local Purchasing Power Prediction")
 
