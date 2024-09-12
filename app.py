@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
 import joblib
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score
 
 # Load the saved model
-agg = joblib.load('models/agg.pkl')
+agg = joblib.load('models/hierarchical_clustering_model.pkl')
 
 # Title of the Streamlit app
 st.title('Hierarchical Clustering Model Deployment')
@@ -31,8 +32,12 @@ df = pd.DataFrame(input_data)
 st.write('### Input Data')
 st.write(df)
 
+# Scale the input data
+scaler = StandardScaler()
+df_scaled = scaler.fit_transform(df)
+
 # Predict clusters using the loaded model
-df['cluster'] = agg.fit_predict(df)
+df['cluster'] = agg.fit_predict(df_scaled)
 
 # Display the results
 st.write('### Clustered Data')
@@ -40,7 +45,7 @@ st.write(df)
 
 # Calculate and display silhouette score
 if len(df) > 1:  # Ensure more than one sample for silhouette score calculation
-    silhouette = silhouette_score(df.drop('cluster', axis=1), df['cluster'])
+    silhouette = silhouette_score(df_scaled, df['cluster'])
     st.write(f'### Silhouette Score: {silhouette:.4f}')
 else:
     st.write('### Silhouette Score: Not applicable for a single input.')
