@@ -4,7 +4,7 @@ import joblib
 from sklearn.metrics import silhouette_score
 
 # Load the saved model
-agg = joblib.load('agg.pkl')
+agg = joblib.load('models/agg.pkl')
 
 # Title of the Streamlit app
 st.title('Hierarchical Clustering Model Deployment')
