@@ -5,7 +5,11 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score
 
 # Load the saved model
-agg = joblib.load('models/hierarchical_clustering_model.pkl')
+try:
+    agg = joblib.load('models/hierarchical_clustering_model.pkl')
+except FileNotFoundError:
+    st.error('Model file not found. Please ensure the model file is correctly placed.')
+    st.stop()  # Stop the execution if the file is not found
 
 # Title of the Streamlit app
 st.title('Hierarchical Clustering Model Deployment')
