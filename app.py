@@ -1,60 +1,25 @@
 import streamlit as st
-import joblib
-import numpy as np
-import pandas as pd
-from sklearn.preprocessing import StandardScaler
+import pickle
 
-# Load the saved model and columns
-model = joblib.load('models/Random_Forest_Model.pkl')
-columns = joblib.load('models/Random_Forest_Columns.pkl')
+# โหลดโมเดลที่บันทึกไว้
+with open('models/agg.pkl', 'rb') as file:
+    model = pickle.load(file)
 
-# Load the training data to create the scaler
-# Replace with the path to your training data CSV file
-df = pd.read_csv('Cost_of_Living_Index_by_Country_2024.csv')
+# สร้างอินเตอร์เฟซ Streamlit
+st.title('Cost of Living Prediction')
 
-# Drop columns and handle missing values as done during model training
-df = df.drop(['Rank', 'Country'], axis=1)
-df = df.dropna()
-df = df.drop_duplicates()
+# สร้างช่องรับอินพุตสำหรับดัชนีต่าง ๆ
+cost_of_living_index = st.number_input('Cost of Living Index', min_value=0.0, max_value=1000.0, value=50.0)
+rent_index = st.number_input('Rent Index', min_value=0.0, max_value=1000.0, value=50.0)
+groceries_index = st.number_input('Groceries Index', min_value=0.0, max_value=1000.0, value=50.0)
+restaurant_price_index = st.number_input('Restaurant Price Index', min_value=0.0, max_value=1000.0, value=50.0)
+local_purchasing_power_index = st.number_input('Local Purchasing Power Index', min_value=0.0, max_value=1000.0, value=50.0)
 
-# Create a new scaler using the training data
-scaler = StandardScaler()
-X = df[columns]  # Features used for scaling
-X_scaled = scaler.fit_transform(X)
-
-st.title("Local Purchasing Power Prediction")
-
-st.sidebar.header("Input Features")
-
-def user_input_features():
-    cost_of_living_index = st.sidebar.slider("Cost of Living Index", 0, 200, 80)
-    rent_index = st.sidebar.slider("Rent Index", 0, 200, 50)
-    cost_of_living_plus_rent_index = st.sidebar.slider("Cost of Living Plus Rent Index", 0, 200, 65)
-    groceries_index = st.sidebar.slider("Groceries Index", 0, 200, 75)
-    restaurant_price_index = st.sidebar.slider("Restaurant Price Index", 0, 200, 70)
-
-    data = {
-        'Cost of Living Index': cost_of_living_index,
-        'Rent Index': rent_index,
-        'Cost of Living Plus Rent Index': cost_of_living_plus_rent_index,
-        'Groceries Index': groceries_index,
-        'Restaurant Price Index': restaurant_price_index
-    }
-    features = np.array([list(data.values())])
-    return features, data
-
-input_features, input_data = user_input_features()
-
-st.write("### Input Features")
-st.write(input_data)
-
-# Prepare the features for the model
-input_features_df = pd.DataFrame(input_features, columns=columns)
-
-# Scale the input features
-input_features_scaled = scaler.transform(input_features_df)
-
-# Predict the output using the loaded model
-prediction = model.predict(input_features_scaled)
-
-st.write(f"### Predicted Local Purchasing Power Index: **{prediction[0]:.2f}**")
+# เมื่อผู้ใช้กดปุ่มทำนาย
+if st.button('Predict'):
+    # ใช้โมเดลในการทำนายผล
+    input_data = [[cost_of_living_index, rent_index, groceries_index, restaurant_price_index, local_purchasing_power_index]]
+    result = model.predict(input_data)
+    
+    # แสดงผลลัพธ์การทำนาย
+    st.write('Prediction result:', result)
