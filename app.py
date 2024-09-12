@@ -1,9 +1,9 @@
 import streamlit as st
-import pickle
+import joblib
+import numpy as np
 
 # โหลดโมเดลที่บันทึกไว้
-with open('models/agg.pkl', 'rb') as file:
-    model = pickle.load(file)
+model = joblib.load('models/agg.pkl')
 
 # สร้างอินเตอร์เฟซ Streamlit
 st.title('Cost of Living Prediction')
@@ -17,9 +17,11 @@ local_purchasing_power_index = st.number_input('Local Purchasing Power Index', m
 
 # เมื่อผู้ใช้กดปุ่มทำนาย
 if st.button('Predict'):
+    # เตรียมข้อมูลอินพุต
+    input_data = np.array([[cost_of_living_index, rent_index, groceries_index, restaurant_price_index, local_purchasing_power_index]])
+    
     # ใช้โมเดลในการทำนายผล
-    input_data = [[cost_of_living_index, rent_index, groceries_index, restaurant_price_index, local_purchasing_power_index]]
     result = model.predict(input_data)
     
     # แสดงผลลัพธ์การทำนาย
-    st.write('Prediction result:', result)
+    st.write('Prediction result:', result[0])
