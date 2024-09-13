@@ -39,6 +39,8 @@ if st.button('Predict'):
 
     # Display the result
     rent_index = predicted_rent_index[0]
+    st.write(f"Rent Index {abs(rent_index):.2f}")
+    
     new_york_rent_index = 100
     if rent_index > new_york_rent_index:
         st.write(f"Rent Index is higher than Rent Index in New York City by {abs(new_york_rent_index - rent_index):.2f} %")
