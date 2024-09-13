@@ -39,3 +39,4 @@ if st.button('Predict'):
 
     # Display the result
     st.write(f"Predicted Rent Index: {predicted_rent_index[0]:.2f}")
+    st.write(f"Rent Index Cheaper than Rent in New York City ({100-predicted_rent_index[0]:.2f} %)")
