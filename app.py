@@ -38,5 +38,9 @@ if st.button('Predict'):
     predicted_rent_index = model.predict(new_data_scaled)
 
     # Display the result
-    st.write(f"Predicted Rent Index: {predicted_rent_index[0]:.2f}")
-    st.write(f"Rent Index Cheaper than Rent in New York City ({100-predicted_rent_index[0]:.2f} %)")
+    rent_index = predicted_rent_index[0]
+    new_york_rent_index = 100
+    if rent_index > new_york_rent_index:
+        st.write(f"Rent Index is higher than Rent Index in New York City by {abs(new_york_rent_index - rent_index):.2f} %")
+    else:
+        st.write(f"Rent Index is lower than Rent Index in New York City by {abs(new_york_rent_index - rent_index):.2f} %")
