@@ -1,30 +1,41 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import numpy as np
+from sklearn.preprocessing import StandardScaler
 
-# โหลดโมเดลและข้อมูลคอลัมน์
-model = joblib.load('models/Logistic_Regression_Model.pkl')
-columns = joblib.load('models/Logistic_Regression_Columns.pkl')
+# Load the trained model and scaler parameters
+model = joblib.load('models/Linear_Regression_Model.pkl')
 
-# ฟังก์ชันสำหรับการคาดการณ์
-def predict_rent(features):
-    # แปลงข้อมูลเป็น DataFrame
-    input_data = pd.DataFrame([features], columns=columns)
-    # ทำนายผล
-    prediction = model.predict(input_data)
-    return prediction[0]
+scaler_params = joblib.load('models/Scaler_Parameters.pkl')
 
-# สร้างแอพ Streamlit
+scaler = StandardScaler()
+scaler.mean_ = scaler_params['mean']
+scaler.scale_ = scaler_params['scale']
+
+# Define the Streamlit app
 st.title('Rent Index Prediction')
 
-# สร้างฟอร์มสำหรับการกรอกข้อมูล
-st.sidebar.header('Input Features')
-inputs = {}
-for column in columns:
-    inputs[column] = st.sidebar.number_input(f'{column}', value=0.0)
+# Create input fields for user to enter values
+cost_of_living_index = st.number_input('Cost of Living Index', min_value=0.0, value=101.1)
+groceries_index = st.number_input('Groceries Index', min_value=0.0, value=109.1)
+restaurant_price_index = st.number_input('Restaurant Price Index', min_value=0.0, value=97.0)
+local_purchasing_power_index = st.number_input('Local Purchasing Power Index', min_value=0.0, value=158.7)
 
-if st.sidebar.button('Predict'):
-    features = [inputs[col] for col in columns]
-    prediction = predict_rent(features)
-    st.write(f'The predicted Rent Index is: {prediction:.2f}')
+# Predict button
+if st.button('Predict'):
+    # Prepare the input data
+    new_data = pd.DataFrame({
+        'Cost of Living Index': [cost_of_living_index],
+        'Groceries Index': [groceries_index],
+        'Restaurant Price Index': [restaurant_price_index],
+        'Local Purchasing Power Index': [local_purchasing_power_index]
+    })
+
+    # Standardize the input data
+    new_data_scaled = scaler.transform(new_data)
+
+    # Predict
+    predicted_rent_index = model.predict(new_data_scaled)
+
+    # Display the result
+    st.write(f"Predicted Rent Index: {predicted_rent_index[0]:.2f}")
