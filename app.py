@@ -3,11 +3,11 @@ import pandas as pd
 import joblib
 from sklearn.preprocessing import StandardScaler
 
-# Load the trained model and scaler parameters
-model = joblib.load('models/Linear_Regression_Model.pkl')
+# Load the trained SVR model and scaler parameters
+model = joblib.load('models/SVR_Model.pkl')  # Ensure you load the SVR model
+scaler_params = joblib.load('models/Scaler_Parameters.pkl')  # Ensure this file exists and contains the parameters
 
-scaler_params = joblib.load('models/Scaler_Parameters.pkl')
-
+# Initialize the scaler with the loaded parameters
 scaler = StandardScaler()
 scaler.mean_ = scaler_params['mean']
 scaler.scale_ = scaler_params['scale']
@@ -39,10 +39,11 @@ if st.button('Predict'):
 
     # Display the result
     rent_index = predicted_rent_index[0]
-    st.write(f"Rent Index {abs(rent_index):.2f}")
+    st.write(f"Rent Index: {abs(rent_index):.2f}")
     
+    # Compare to New York City rent index
     new_york_rent_index = 100
     if rent_index > new_york_rent_index:
-        st.write(f"Rent Index is higher than Rent Index in New York City by {abs(new_york_rent_index - rent_index):.2f} %")
+        st.write(f"Rent Index is higher than in New York City by {abs(new_york_rent_index - rent_index):.2f} %")
     else:
-        st.write(f"Rent Index is lower than Rent Index in New York City by {abs(new_york_rent_index - rent_index):.2f} %")
+        st.write(f"Rent Index is lower than in New York City by {abs(new_york_rent_index - rent_index):.2f} %")
